@@ -54,12 +54,12 @@
     display:flex; align-items:center; justify-content:space-between; gap:16px;
     flex-wrap:wrap;
   }
-  .brand{ display:flex; align-items:center; gap:12px; }
-  .brand img{ height:30px; width:auto; display:block; }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand img{ height:46px; width:auto; display:block; }
   .brand .eyebrow{
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
     text-transform:uppercase; color:var(--bronze); border-left:1px solid var(--stone);
-    padding-left:12px; line-height:1.3;
+    padding-left:14px; line-height:1.3;
   }
   .brand .eyebrow small{ display:block; color:var(--grey); font-size:9.5px; letter-spacing:.1em; margin-top:2px;}
 
@@ -99,14 +99,13 @@
     background-size: 100% 3px; opacity:.6;
   }
 
-  /* ---------- hero / status strip ---------- */
-  .hero{ margin-top:28px; }
-  .hero-row{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; }
-  .hero h1{
-    font-family:'Fraunces', serif; font-weight:600; font-size:clamp(26px,4vw,38px);
-    letter-spacing:-0.01em; margin:0 0 4px;
-  }
+  /* ---------- hero ---------- */
+  .hero{ margin-top:26px; }
+  .hero-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
   .hero .sub{ color:var(--grey); font-size:14px; }
+
+  /* ---------- hero / status strip ---------- */
+
   .sync-pill{
     display:inline-flex; align-items:center; gap:7px; font-family:'IBM Plex Mono', monospace;
     font-size:11px; color:var(--grey); background:var(--card); border:1px solid var(--stone);
@@ -116,81 +115,70 @@
   .sync-dot.stale{ background:var(--amber); }
   .sync-dot.err{ background:var(--brick); }
 
-  /* ---------- ranking cards ---------- */
-  .ranking-scroll{ display:flex; gap:14px; overflow-x:auto; padding:20px 2px 10px; margin:0 -2px; scroll-snap-type:x proximity; }
-  .rank-card{
-    scroll-snap-align:start;
-    flex:0 0 168px; background:var(--card); border:1px solid var(--stone); border-radius:var(--radius);
-    padding:16px 16px 14px; box-shadow:var(--shadow); position:relative; overflow:hidden;
-    opacity:0; transform:translateY(10px); animation:fadeUp .5s ease forwards;
-  }
-  .rank-card::before{
-    content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--status-color, var(--stone));
-  }
-  .rank-card .medal{ font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--grey); letter-spacing:.08em; }
-  .rank-card .name{ font-family:'Fraunces', serif; font-weight:600; font-size:18px; margin:4px 0 1px; line-height:1.15; }
-  .rank-card .role{ font-size:11.5px; color:var(--grey); margin-bottom:10px; }
-  .rank-card .pts-row{ display:flex; align-items:baseline; gap:5px; margin-bottom:10px; }
-  .rank-card .pts{ font-family:'IBM Plex Mono'; font-size:26px; font-weight:600; color:var(--status-color, var(--ink)); }
-  .rank-card .pts-label{ font-size:10.5px; color:var(--grey); }
-  .eq{ display:flex; align-items:flex-end; gap:3px; height:26px; }
-  .eq i{ flex:1; background:var(--stone-soft); border-radius:2px 2px 0 0; min-height:3px; }
   .status-pill{
     display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700;
     letter-spacing:.03em; text-transform:uppercase; padding:4px 9px; border-radius:999px;
-    margin-top:10px; color:var(--status-color); background:var(--status-bg);
+    color:var(--status-color); background:var(--status-bg); flex:none;
   }
   .status-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--status-color); }
 
   @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
 
-  /* ---------- detail table ---------- */
-  .table-card{ background:var(--card); border:1px solid var(--stone); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-top:14px; }
-  table.detail{ width:100%; border-collapse:collapse; font-size:13.5px; }
-  table.detail th{
-    text-align:left; font-family:'IBM Plex Mono'; font-weight:500; font-size:10.5px; letter-spacing:.06em;
-    text-transform:uppercase; color:var(--grey); padding:12px 14px; border-bottom:1px solid var(--stone);
-    cursor:pointer; user-select:none; white-space:nowrap;
+  /* ---------- alerts ---------- */
+  .alert-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .alert-card{
+    background:var(--card); border:1px solid var(--stone); border-left:4px solid var(--sev-color, var(--stone));
+    border-radius:11px; padding:14px 18px; box-shadow:var(--shadow);
+    opacity:0; transform:translateY(8px); animation:fadeUp .45s ease forwards;
   }
-  table.detail th:hover{ color:var(--bronze); }
-  table.detail th .arrow{ opacity:.4; font-size:9px; margin-left:3px; }
-  table.detail td{ padding:12px 14px; border-bottom:1px solid var(--stone-soft); vertical-align:middle; }
-  table.detail tr:last-child td{ border-bottom:none; }
-  table.detail tr:hover td{ background:var(--porcelain); }
-  table.detail td.name{ font-family:'Fraunces', serif; font-weight:600; font-size:15px; }
-  table.detail td.role{ color:var(--grey); font-size:12px; }
-  table.detail td.num{ font-family:'IBM Plex Mono'; text-align:center; color:var(--ink-soft); }
-  table.detail td.total{ font-family:'IBM Plex Mono'; font-weight:700; text-align:center; }
+  .alert-card .al-month{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--grey); margin-bottom:6px;
+  }
+  .alert-card p{ margin:0; font-size:14px; line-height:1.65; color:var(--ink-soft); }
+  .al-strong{ font-weight:700; }
+  .al-strong.reprovado{ color:var(--brick); }
+  .al-strong.alerta{ color:var(--amber); }
+  .alert-empty{ color:var(--grey); font-size:13.5px; padding:18px 2px; }
+  .alerts-more{ margin-top:4px; }
 
-  /* ---------- heatmap ---------- */
-  .heat-scroll{ overflow-x:auto; background:var(--card); border:1px solid var(--stone); border-radius:var(--radius); box-shadow:var(--shadow); margin-top:14px; padding:6px 6px 10px; }
-  table.heat{ border-collapse:collapse; font-size:11.5px; min-width:640px; width:100%; }
-  table.heat th{ font-family:'IBM Plex Mono'; font-weight:500; font-size:10px; color:var(--grey); text-transform:uppercase; padding:10px 6px; text-align:center; }
-  table.heat th:first-child{ text-align:left; padding-left:10px; }
-  table.heat td{ text-align:center; padding:4px; }
-  table.heat td.mname{
-    text-align:left; font-family:'Inter'; font-weight:600; font-size:12.5px; padding-left:10px;
-    position:sticky; left:0; background:var(--card); white-space:nowrap;
+  /* ---------- member accordion ---------- */
+  .m-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .m-row{
+    background:var(--card); border:1px solid var(--stone); border-radius:12px; box-shadow:var(--shadow);
+    overflow:hidden; opacity:0; transform:translateY(8px); animation:fadeUp .45s ease forwards;
   }
-  .heat-cell{
-    width:30px; height:26px; margin:0 auto; border-radius:6px; display:flex; align-items:center; justify-content:center;
-    font-family:'IBM Plex Mono'; font-size:10.5px; font-weight:600; color:var(--ink-soft);
-    background:var(--stone-soft);
+  .m-head{
+    all:unset; box-sizing:border-box; display:flex; align-items:center; gap:14px; width:100%;
+    padding:15px 18px; cursor:pointer;
   }
+  .m-head:focus-visible{ outline:2px solid var(--bronze); outline-offset:-2px; }
+  .m-bar{ width:4px; align-self:stretch; min-height:36px; border-radius:3px; flex:none; }
+  .m-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16.5px; flex:1; min-width:0;
+    display:flex; flex-direction:column; gap:2px; }
+  .m-name .m-role{ font-family:'Inter'; font-weight:400; font-size:11.5px; color:var(--grey); }
+  .m-pts{ font-family:'IBM Plex Mono'; font-weight:700; font-size:20px; text-align:right; flex:none; }
+  .m-pts small{ font-size:10px; font-weight:500; margin-left:2px; color:var(--grey); }
+  .m-chev{ color:var(--grey); font-size:12px; flex:none; transition:transform .25s ease; }
+  .m-row.open .m-chev{ transform:rotate(180deg); }
 
-  /* ---------- feed ---------- */
-  .feed{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
-  .feed-item{
-    display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--stone);
-    border-radius:11px; padding:11px 14px; box-shadow:var(--shadow);
-  }
-  .feed-item .bar{ width:4px; align-self:stretch; border-radius:3px; background:var(--status-color); flex:none; }
-  .feed-item .who{ font-weight:600; font-size:13.5px; }
-  .feed-item .what{ font-size:12.5px; color:var(--grey); }
-  .feed-item .meta{ margin-left:auto; text-align:right; flex:none; }
-  .feed-item .date{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--grey); }
-  .feed-item .pts{ font-family:'IBM Plex Mono'; font-weight:700; font-size:12.5px; color:var(--status-color); }
-  .feed-item .obs{ display:block; font-size:11.5px; color:var(--grey); margin-top:2px; font-style:italic; }
+  .m-body-wrap{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
+  .m-row.open .m-body-wrap{ grid-template-rows:1fr; }
+  .m-body{ overflow:hidden; }
+  .m-body-inner{ padding:14px 18px 18px; border-top:1px solid var(--stone-soft); }
+
+  .m-strip{ display:flex; gap:4px; align-items:flex-end; height:50px; margin-bottom:16px; }
+  .m-strip .bar-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .m-strip .bar{ width:100%; border-radius:3px 3px 0 0; background:var(--stone-soft); min-height:3px; transition:height .3s ease; }
+  .m-strip .lbl{ font-family:'IBM Plex Mono'; font-size:9px; color:var(--grey); }
+
+  .m-occ{ display:flex; flex-direction:column; gap:0; max-height:280px; overflow-y:auto; }
+  .m-occ-row{ display:flex; align-items:baseline; gap:12px; font-size:12.5px; padding:8px 2px; border-bottom:1px solid var(--stone-soft); }
+  .m-occ-row:last-child{ border-bottom:none; }
+  .m-occ-date{ font-family:'IBM Plex Mono'; color:var(--grey); flex:none; width:72px; }
+  .m-occ-tipo{ font-weight:600; flex:none; white-space:nowrap; }
+  .m-occ-obs{ color:var(--grey); font-style:italic; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .m-occ-empty{ color:var(--grey); font-size:12.5px; padding:4px 2px; }
 
   /* ---------- empty / error states ---------- */
   .state-card{
@@ -251,14 +239,15 @@
 
   @media (max-width: 720px){
     .wrap{ padding:0 14px 48px; }
-    table.detail thead{ display:none; }
-    table.detail, table.detail tbody, table.detail tr, table.detail td{ display:block; width:100%; }
-    table.detail tr{ padding:12px 14px; border-bottom:1px solid var(--stone-soft); }
-    table.detail td{ border:none; padding:3px 0; display:flex; justify-content:space-between; gap:10px; }
-    table.detail td.name{ font-size:16px; padding-bottom:6px; }
-    table.detail td.role{ margin-top:-6px; padding-bottom:8px; }
-    table.detail td::before{ content:attr(data-label); font-family:'IBM Plex Mono'; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--grey); }
-    table.detail td.name::before, table.detail td.role::before{ content:""; }
+  }
+  @media (max-width: 480px){
+    .brand img{ height:34px; }
+    .brand .eyebrow small{ display:none; }
+    .m-head{ gap:10px; padding:13px 14px; }
+    .m-name{ font-size:15px; }
+    .m-pts{ font-size:17px; }
+    .status-pill{ display:none; }
+    .m-occ-obs{ display:none; }
   }
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
@@ -290,10 +279,7 @@
 
   <div class="hero">
     <div class="hero-row">
-      <div>
-        <h1 id="heroTitle">Studio Score</h1>
-        <div class="sub" id="heroSub">Carregando dados…</div>
-      </div>
+      <div class="sub" id="heroSub">Carregando dados…</div>
       <div class="sync-pill" id="syncPill"><span class="sync-dot" id="syncDot"></span><span id="syncText">—</span></div>
     </div>
   </div>
@@ -366,6 +352,8 @@ const state = {
   syncedAt: null,
   lastError: null,
   usingCache: false,
+  expanded: new Set(), // member keys currently expanded
+  showAllAlerts: false,
 };
 
 /* ================= helpers ================= */
@@ -426,6 +414,25 @@ function fmtDate(d){
   const mm = String(d.getMonth()+1).padStart(2,"0");
   return `${dd}/${mm}`;
 }
+
+function fmtDateFull(d){
+  if(!d) return "—";
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  return `${dd}/${mm}/${d.getFullYear()}`;
+}
+
+function joinPt(list){
+  if(list.length === 0) return "";
+  if(list.length === 1) return list[0];
+  return list.slice(0, -1).join(", ") + " e " + list[list.length - 1];
+}
+
+function personList(rows){
+  return joinPt(rows.map(m => `${esc(m.nome)} (${m.pts} pts)`));
+}
+
+function vb(n, singular, plural){ return n === 1 ? singular : plural; }
 
 function esc(s){
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -574,6 +581,28 @@ function computeHeatmap(members, occurrences, year){
   return Array.from(map.values());
 }
 
+function getMonthKeys(occurrences){
+  const set = new Set();
+  occurrences.forEach(o => { if(o.data) set.add(o.data.getFullYear() + "-" + (o.data.getMonth() + 1)); });
+  return Array.from(set)
+    .map(k => { const [y, m] = k.split("-").map(Number); return { year: y, month: m }; })
+    .sort((a, b) => b.year - a.year || b.month - a.month);
+}
+
+function narrativeFor(monthStats){
+  const withPts = monthStats.filter(m => m.pts > 0);
+  if(withPts.length === 0) return null;
+  const reprovados = withPts.filter(m => m.pts >= 7).sort((a,b) => b.pts - a.pts);
+  const alertas = withPts.filter(m => m.pts >= 4 && m.pts < 7).sort((a,b) => b.pts - a.pts);
+  const relevantes = withPts.filter(m => m.pts > 0 && m.pts < 4).sort((a,b) => b.pts - a.pts);
+  const parts = [];
+  if(reprovados.length) parts.push(`<span class="al-strong reprovado">${personList(reprovados)}</span> ${vb(reprovados.length,"ficou reprovado","ficaram reprovados")}.`);
+  if(alertas.length) parts.push(`<span class="al-strong alerta">${personList(alertas)}</span> ${vb(alertas.length,"ficou em alerta","ficaram em alerta")}.`);
+  if(relevantes.length) parts.push(`${personList(relevantes)} ${vb(relevantes.length,"teve pontuação relevante","tiveram pontuação relevante")}.`);
+  const worst = reprovados.length ? "reprovado" : alertas.length ? "alerta" : "ok";
+  return { html: parts.join(" "), worst };
+}
+
 function getYearRange(occurrences){
   const now = new Date();
   let min = now.getFullYear(), max = now.getFullYear();
@@ -682,7 +711,6 @@ function populateSelectors(){
 }
 
 function renderHero(){
-  const title = document.getElementById("heroTitle");
   const sub = document.getElementById("heroSub");
   if(state.month && state.year){
     sub.textContent = `${MONTHS_FULL[state.month-1]} de ${state.year} · ${state.members.length} ${state.members.length===1?"membro":"membros"} no elenco`;
@@ -704,105 +732,81 @@ function renderHero(){
   if(lastSyncDrawer) lastSyncDrawer.textContent = state.syncedAt ? state.syncedAt.toLocaleString("pt-BR") : "nunca";
 }
 
-function rankCardHtml(m, i){
-  const st = statusOf(m.pts);
-  const cats = [m.faltaEnsaio, m.atrasoEnsaio, m.faltaAgenda, m.atrasoAgenda];
-  const maxCat = Math.max(1, ...cats);
-  const bars = cats.map(c => {
-    const h = c === 0 ? 3 : Math.max(6, (c / Math.max(maxCat,4)) * 22);
-    return `<i style="height:${h}px; background:${c>0?st.color:'var(--stone-soft)'}"></i>`;
-  }).join("");
-  return `
-  <div class="rank-card" style="--status-color:${st.color}; animation-delay:${i*45}ms;">
-    <div class="medal">${esc(m.funcao || "—")}</div>
-    <div class="name">${esc(m.nome)}</div>
-    <div class="role">&nbsp;</div>
-    <div class="pts-row"><span class="pts">${m.pts}</span><span class="pts-label">pts</span></div>
-    <div class="eq">${bars}</div>
-    <div class="status-pill" style="--status-color:${st.color}; --status-bg:${st.bg};"><span class="dot"></span>${st.label}</div>
-  </div>`;
-}
-
-function sortRows(rows){
-  const key = state.sortKey, dir = state.sortDir === "asc" ? 1 : -1;
-  return [...rows].sort((a,b) => {
-    let va = a[key], vb = b[key];
-    if(typeof va === "string"){ va = norm(va); vb = norm(vb); }
-    if(va < vb) return -1*dir;
-    if(va > vb) return 1*dir;
-    return a.nome.localeCompare(b.nome);
+function alertsHtml(){
+  const keys = getMonthKeys(state.occurrences);
+  const cards = [];
+  keys.forEach(({year, month}) => {
+    const stats = computeMonthStats(state.members, state.occurrences, month, year);
+    const nar = narrativeFor(stats);
+    if(!nar) return;
+    const color = nar.worst === "reprovado" ? "var(--brick)" : nar.worst === "alerta" ? "var(--amber)" : "var(--emerald)";
+    cards.push(`<div class="alert-card" style="--sev-color:${color}">
+      <div class="al-month">${MONTHS_FULL[month-1]} ${year}</div>
+      <p>${nar.html}</p>
+    </div>`);
   });
-}
-
-function tableHtml(rows){
-  const cols = [
-    { key:"nome", label:"Membro" },
-    { key:"funcao", label:"Função" },
-    { key:"faltaEnsaio", label:"Falta Ens." },
-    { key:"atrasoEnsaio", label:"Atraso Ens." },
-    { key:"faltaAgenda", label:"Falta Ag." },
-    { key:"atrasoAgenda", label:"Atraso Ag." },
-    { key:"pts", label:"Total" },
-    { key:"status", label:"Status" },
-  ];
-  const sorted = sortRows(rows);
-  const thead = cols.map(c => {
-    const active = state.sortKey === c.key;
-    const arrow = active ? (state.sortDir === "asc" ? "↑" : "↓") : "";
-    return `<th data-key="${c.key}">${c.label}<span class="arrow">${arrow}</span></th>`;
-  }).join("");
-  const tbody = sorted.map(m => {
-    const st = statusOf(m.pts);
-    return `<tr>
-      <td class="name" data-label="Membro">${esc(m.nome)}</td>
-      <td class="role" data-label="Função">${esc(m.funcao || "—")}</td>
-      <td class="num" data-label="Falta Ensaio">${m.faltaEnsaio}</td>
-      <td class="num" data-label="Atraso Ensaio">${m.atrasoEnsaio}</td>
-      <td class="num" data-label="Falta Agenda">${m.faltaAgenda}</td>
-      <td class="num" data-label="Atraso Agenda">${m.atrasoAgenda}</td>
-      <td class="total" data-label="Total" style="color:${st.color}">${m.pts}</td>
-      <td data-label="Status"><span class="status-pill" style="--status-color:${st.color}; --status-bg:${st.bg}; margin-top:0;"><span class="dot"></span>${st.label}</span></td>
-    </tr>`;
-  }).join("");
-  return `<div class="table-card"><table class="detail"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>`;
-}
-
-function heatmapHtml(){
-  const data = computeHeatmap(state.members, state.occurrences, state.year);
-  const rosterOrder = new Map(state.members.map((m,i) => [m.key, i]));
-  data.sort((a,b) => (rosterOrder.has(a.key)?rosterOrder.get(a.key):999) - (rosterOrder.has(b.key)?rosterOrder.get(b.key):999));
-  const thead = `<tr><th>Membro</th>${MONTHS.map(m => `<th>${m}</th>`).join("")}</tr>`;
-  const rows = data.map(row => {
-    const cells = row.months.map(pts => {
-      const st = statusOf(pts);
-      const bg = pts > 0 ? st.bg : "var(--stone-soft)";
-      const color = pts > 0 ? st.color : "var(--grey)";
-      return `<td><div class="heat-cell" style="background:${bg}; color:${color};" title="${pts} pts">${pts > 0 ? pts : "–"}</div></td>`;
-    }).join("");
-    return `<tr><td class="mname">${esc(row.nome)}</td>${cells}</tr>`;
-  }).join("");
-  return `<div class="heat-scroll"><table class="heat"><thead>${thead}</thead><tbody>${rows}</tbody></table></div>`;
-}
-
-function feedHtml(){
-  const items = [...state.occurrences]
-    .filter(o => o.data)
-    .sort((a,b) => b.data - a.data)
-    .slice(0, 8);
-  if(items.length === 0){
-    return `<div class="state-card"><div class="glyph">📋</div><h3>Nenhuma ocorrência ainda</h3><p>Assim que você registrar faltas ou atrasos na planilha, elas aparecem aqui.</p></div>`;
+  if(cards.length === 0){
+    return `<div class="alert-empty">Nenhum alerta registrado até agora — tudo em dia. 🎉</div>`;
   }
-  return `<div class="feed">${items.map(o => {
+  const visible = state.showAllAlerts ? cards : cards.slice(0, 4);
+  const moreBtn = cards.length > 4
+    ? `<button class="btn ghost alerts-more" id="btnMoreAlerts">${state.showAllAlerts ? "Mostrar menos" : `Ver histórico completo (${cards.length})`}</button>`
+    : "";
+  return `<div class="alert-list">${visible.join("")}</div>${moreBtn}`;
+}
+
+function memberStripHtml(monthsArr){
+  const max = Math.max(4, ...monthsArr);
+  return `<div class="m-strip">${monthsArr.map((pts, i) => {
+    const st = statusOf(pts);
+    const h = pts === 0 ? 3 : Math.max(6, (pts / Math.max(max,7)) * 40);
+    const color = pts > 0 ? st.color : "var(--stone-soft)";
+    return `<div class="bar-wrap" title="${MONTHS_FULL[i]}: ${pts} pts">
+      <div class="bar" style="height:${h}px; background:${color}"></div>
+      <div class="lbl">${MONTHS[i][0]}</div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function memberOccHtml(memberKey){
+  const rows = state.occurrences
+    .filter(o => o.membroKey === memberKey && o.data)
+    .sort((a,b) => b.data - a.data);
+  if(rows.length === 0) return `<div class="m-occ-empty">Nenhuma ocorrência registrada.</div>`;
+  return `<div class="m-occ">${rows.map(o => {
     const pts = o.tipo ? POINTS[o.tipo] : 0;
-    const st = pts >= 3 ? {color:"var(--brick)"} : pts === 2 ? {color:"var(--amber)"} : {color:"var(--emerald)"};
+    const color = pts >= 3 ? "var(--brick)" : pts === 2 ? "var(--amber)" : "var(--emerald)";
     const label = o.tipo ? TIPO_LABEL[o.tipo] : o.tipoRaw;
-    return `<div class="feed-item" style="--status-color:${st.color}">
-      <div class="bar"></div>
-      <div>
-        <div class="who">${esc(o.membro)} <span class="what">— ${esc(label)}</span></div>
-        ${o.observacao ? `<span class="obs">${esc(o.observacao)}</span>` : ""}
-      </div>
-      <div class="meta"><div class="date">${fmtDate(o.data)}</div><div class="pts">+${pts}</div></div>
+    return `<div class="m-occ-row">
+      <span class="m-occ-date">${fmtDateFull(o.data)}</span>
+      <span class="m-occ-tipo" style="color:${color}">${esc(label)} · +${pts}</span>
+      <span class="m-occ-obs">${esc(o.observacao || "")}</span>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function memberListHtml(){
+  const monthStats = computeMonthStats(state.members, state.occurrences, state.month, state.year);
+  const ranked = [...monthStats].sort((a,b) => b.pts - a.pts || a.nome.localeCompare(b.nome));
+  const heat = computeHeatmap(state.members, state.occurrences, state.year);
+  const heatMap = new Map(heat.map(h => [h.key, h.months]));
+
+  return `<div class="m-list">${ranked.map((m, i) => {
+    const st = statusOf(m.pts);
+    const open = state.expanded.has(m.key);
+    const monthsArr = heatMap.get(m.key) || new Array(12).fill(0);
+    return `<div class="m-row ${open ? "open" : ""}" style="animation-delay:${i*35}ms;">
+      <button class="m-head" data-toggle="${esc(m.key)}" aria-expanded="${open}">
+        <span class="m-bar" style="background:${st.color}"></span>
+        <span class="m-name">${esc(m.nome)}<span class="m-role">${esc(m.funcao || "—")}</span></span>
+        <span class="m-pts" style="color:${st.color}">${m.pts}<small>pts</small></span>
+        <span class="status-pill" style="--status-color:${st.color}; --status-bg:${st.bg};"><span class="dot"></span>${st.label}</span>
+        <span class="m-chev">⌄</span>
+      </button>
+      <div class="m-body-wrap"><div class="m-body"><div class="m-body-inner">
+        ${memberStripHtml(monthsArr)}
+        ${memberOccHtml(m.key)}
+      </div></div></div>
     </div>`;
   }).join("")}</div>`;
 }
@@ -842,22 +846,14 @@ function render(){
   }
 
   populateSelectors();
-  const monthStats = computeMonthStats(state.members, state.occurrences, state.month, state.year);
-  const ranked = sortRows(monthStats).length ? [...monthStats].sort((a,b) => b.pts - a.pts) : monthStats;
 
   content.innerHTML = `
     ${errorBannerHtml()}
-    <div class="section-head"><h2>Ranking do mês</h2><div class="staff-mini"></div></div>
-    <div class="ranking-scroll">${ranked.map((m,i) => rankCardHtml(m,i)).join("")}</div>
+    <div class="section-head"><h2>Alertas</h2><div class="staff-mini"></div></div>
+    ${alertsHtml()}
 
-    <div class="section-head"><h2>Detalhamento</h2><span class="hint">clique nas colunas para ordenar</span><div class="staff-mini"></div></div>
-    ${tableHtml(monthStats)}
-
-    <div class="section-head"><h2>Histórico — mapa mensal · ${state.year}</h2><div class="staff-mini"></div></div>
-    ${heatmapHtml()}
-
-    <div class="section-head"><h2>Ocorrências recentes</h2><div class="staff-mini"></div></div>
-    ${feedHtml()}
+    <div class="section-head"><h2>Membros</h2><span class="hint">clique para ver o histórico completo</span><div class="staff-mini"></div></div>
+    ${memberListHtml()}
   `;
 
   bindDynamicHandlers();
@@ -874,15 +870,15 @@ function bindEmptyState(){
 function bindDynamicHandlers(){
   const r = document.getElementById("btnRetry");
   if(r) r.addEventListener("click", () => syncData(true));
-  document.querySelectorAll("table.detail th[data-key]").forEach(th => {
-    th.addEventListener("click", () => {
-      const key = th.getAttribute("data-key");
-      if(state.sortKey === key){
-        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
-      } else {
-        state.sortKey = key;
-        state.sortDir = key === "nome" || key === "funcao" ? "asc" : "desc";
-      }
+
+  const moreBtn = document.getElementById("btnMoreAlerts");
+  if(moreBtn) moreBtn.addEventListener("click", () => { state.showAllAlerts = !state.showAllAlerts; render(); });
+
+  document.querySelectorAll(".m-head").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-toggle");
+      if(state.expanded.has(key)) state.expanded.delete(key);
+      else state.expanded.add(key);
       render();
     });
   });
