@@ -21,6 +21,8 @@
     --bronze:#8A6A3B;
     --bronze-soft:#F2EBDD;
     --gold-rgb:200,163,64;
+    --teal:#3E6E7A;
+    --violet:#8874A8;
     --emerald:#3E7A5C;
     --emerald-soft:#E7F0EA;
     --amber:#B8842C;
@@ -141,26 +143,76 @@
     }
   }
 
+  /* ---------- roster summary ---------- */
+  .roster-card{
+    position:relative;
+    background:linear-gradient(180deg, #FFFFFF 0%, #FBF7EC 100%);
+    border:1px solid rgba(var(--gold-rgb),.30); border-radius:14px; box-shadow:var(--shadow);
+    padding:22px 24px; margin-top:14px; overflow:hidden;
+    opacity:0; transform:translateY(8px);
+    animation: fadeUp .5s ease forwards, floatY 7.5s ease-in-out .5s infinite, glowPulse 6.2s ease-in-out .5s infinite;
+  }
+  .roster-top{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+  .roster-ring{ width:118px; flex:none; }
+  .roster-ring svg{ width:100%; height:auto; overflow:visible; }
+  .roster-ring circle{ transition: stroke-dasharray .6s ease; }
+  .ring-num{ font-family:'Fraunces', serif; font-weight:700; font-size:26px; fill:var(--ink); }
+  .ring-lbl{ font-family:'IBM Plex Mono'; font-size:8px; letter-spacing:.05em; text-transform:uppercase; fill:var(--grey); }
+
+  .roster-chips{ flex:1; min-width:230px; display:flex; flex-direction:column; gap:4px; }
+  .roster-chip-row{ border-radius:9px; }
+  .roster-chip{
+    all:unset; box-sizing:border-box; display:flex; align-items:center; gap:10px; width:100%;
+    padding:9px 10px; cursor:pointer; border-radius:9px; transition:background .15s ease;
+  }
+  .roster-chip:hover{ background:var(--stone-soft); }
+  .roster-chip:focus-visible{ outline:2px solid var(--bronze); outline-offset:-2px; }
+  .rc-dot{ width:9px; height:9px; border-radius:50%; flex:none; }
+  .rc-label{ font-size:13.5px; font-weight:600; color:var(--ink-soft); flex:1; }
+  .rc-num{ font-family:'IBM Plex Mono'; font-weight:700; font-size:15px; color:var(--ink); }
+
+  .roster-chip-row .m-body-inner{ padding:2px 10px 12px 29px; border-top:none; }
+  .roster-names{ display:flex; flex-wrap:wrap; gap:7px; }
+  .name-pill{
+    display:inline-flex; align-items:baseline; gap:5px; background:var(--stone-soft); border-radius:999px;
+    padding:5px 11px; font-size:12px; font-weight:600; color:var(--ink-soft);
+  }
+  .name-pill small{ font-weight:400; color:var(--grey); font-size:10.5px; }
+
   /* ---------- alerts ---------- */
   .alert-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
   .alert-card{
     position:relative;
     background:linear-gradient(180deg, #FFFFFF 0%, #FBF7EC 100%);
     border:1px solid rgba(var(--gold-rgb),.30); border-left:4px solid var(--sev-color, var(--stone));
-    border-radius:11px; padding:14px 18px; box-shadow:var(--shadow);
+    border-radius:11px; box-shadow:var(--shadow); overflow:hidden;
     opacity:0; transform:translateY(8px);
     animation: fadeUp .5s ease forwards, floatY 7s ease-in-out .5s infinite, glowPulse 6s ease-in-out .5s infinite;
   }
-  .alert-card .al-month{
-    font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+  .alert-head{
+    all:unset; box-sizing:border-box; display:flex; align-items:flex-start; gap:12px; width:100%;
+    padding:14px 18px; cursor:pointer;
+  }
+  .alert-head:focus-visible{ outline:2px solid var(--bronze); outline-offset:-2px; }
+  .al-text{ flex:1; min-width:0; }
+  .al-month{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--grey); margin-bottom:6px;
   }
-  .alert-card p{ margin:0; font-size:14px; line-height:1.65; color:var(--ink-soft); }
+  .al-narrative{ display:block; font-size:14px; line-height:1.65; color:var(--ink-soft); }
   .al-strong{ font-weight:700; }
   .al-strong.reprovado{ color:var(--brick); }
   .al-strong.alerta{ color:var(--amber); }
   .alert-empty{ color:var(--grey); font-size:13.5px; padding:18px 2px; }
   .alerts-more{ margin-top:4px; }
+
+  .al-person{ margin-bottom:16px; }
+  .al-person:last-child{ margin-bottom:0; }
+  .al-person-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .al-person-name{ font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; }
+  .al-pts-pill{
+    font-family:'IBM Plex Mono'; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px;
+  }
 
   /* ---------- member accordion ---------- */
   .m-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
@@ -183,10 +235,10 @@
   .m-pts{ font-family:'IBM Plex Mono'; font-weight:700; font-size:20px; text-align:right; flex:none; }
   .m-pts small{ font-size:10px; font-weight:500; margin-left:2px; color:var(--grey); }
   .m-chev{ color:var(--grey); font-size:12px; flex:none; transition:transform .25s ease; }
-  .m-row.open .m-chev{ transform:rotate(180deg); }
+  .m-row.open .m-chev, .alert-card.open .m-chev{ transform:rotate(180deg); }
 
   .m-body-wrap{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
-  .m-row.open .m-body-wrap{ grid-template-rows:1fr; }
+  .m-row.open .m-body-wrap, .alert-card.open .m-body-wrap{ grid-template-rows:1fr; }
   .m-body{ overflow:hidden; }
   .m-body-inner{ padding:14px 18px 18px; border-top:1px solid var(--stone-soft); }
 
@@ -277,6 +329,9 @@
     .m-pts{ font-size:17px; }
     .status-pill{ display:none; }
     .m-occ-obs{ display:none; }
+    .roster-top{ justify-content:center; text-align:center; }
+    .roster-ring{ margin:0 auto; width:104px; }
+    .roster-chips{ min-width:100%; }
   }
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
@@ -382,6 +437,8 @@ const state = {
   lastError: null,
   usingCache: false,
   expanded: new Set(), // member keys currently expanded
+  expandedAlerts: new Set(), // "year-month" keys currently expanded
+  rosterExpanded: new Set(), // roster category keys currently expanded
   showAllAlerts: false,
 };
 
@@ -610,6 +667,29 @@ function computeHeatmap(members, occurrences, year){
   return Array.from(map.values());
 }
 
+function classifyMember(m){
+  const funcNorm = norm(m.funcao);
+  const nameNorm = norm(m.nome);
+  const onLeave = /licenc/.test(funcNorm) || /licenc/.test(nameNorm);
+  const instrumentRe = /(guitarra|contrabaix|\bbaixo\b|bateria|teclad|piano|violao|cavaquinho|\bsax\b|saxofone|trompete|trombone|flauta|violino|cello|violoncelo|percussao|\bdj\b)/;
+  const isInstrument = instrumentRe.test(funcNorm);
+  const isVocal = /vocal/.test(funcNorm);
+  let category = "outro";
+  if(isInstrument) category = "musico";
+  else if(isVocal) category = "vocal";
+  return { onLeave, category };
+}
+
+function computeRosterSummary(members){
+  const groups = { vocal: [], musico: [], outro: [], licenca: [] };
+  members.forEach(m => {
+    const { onLeave, category } = classifyMember(m);
+    groups[category].push(m);
+    if(onLeave) groups.licenca.push(m);
+  });
+  return groups;
+}
+
 function getMonthKeys(occurrences){
   const set = new Set();
   occurrences.forEach(o => { if(o.data) set.add(o.data.getFullYear() + "-" + (o.data.getMonth() + 1)); });
@@ -761,6 +841,92 @@ function renderHero(){
   if(lastSyncDrawer) lastSyncDrawer.textContent = state.syncedAt ? state.syncedAt.toLocaleString("pt-BR") : "nunca";
 }
 
+function rosterCardHtml(){
+  const total = state.members.length;
+  if(total === 0) return "";
+  const groups = computeRosterSummary(state.members);
+  const circ = 2 * Math.PI * 50;
+
+  const ringSegs = [
+    { n: groups.vocal.length, color: "var(--bronze)" },
+    { n: groups.musico.length, color: "var(--teal)" },
+    { n: groups.outro.length, color: "var(--grey)" },
+  ].filter(s => s.n > 0);
+  let offset = 0;
+  const circles = ringSegs.map(s => {
+    const len = (s.n / total) * circ;
+    const dash = `${len.toFixed(2)} ${(circ - len).toFixed(2)}`;
+    const el = `<circle cx="60" cy="60" r="50" fill="none" stroke="${s.color}" stroke-width="13" stroke-dasharray="${dash}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 60 60)" stroke-linecap="round"/>`;
+    offset += len;
+    return el;
+  }).join("");
+
+  const chipDefs = [
+    { key: "vocal", label: "Vocais", color: "var(--bronze)", list: groups.vocal },
+    { key: "musico", label: "Músicos", color: "var(--teal)", list: groups.musico },
+    { key: "outro", label: "Outras funções", color: "var(--grey)", list: groups.outro },
+    { key: "licenca", label: "Em licença", color: "var(--violet)", list: groups.licenca },
+  ].filter(c => c.list.length > 0);
+
+  const chipsHtml = chipDefs.map(c => {
+    const open = state.rosterExpanded.has(c.key);
+    return `<div class="roster-chip-row ${open ? "open" : ""}">
+      <button class="roster-chip" data-roster-toggle="${c.key}" aria-expanded="${open}">
+        <span class="rc-dot" style="background:${c.color}"></span>
+        <span class="rc-label">${c.label}</span>
+        <span class="rc-num">${c.list.length}</span>
+        <span class="m-chev">⌄</span>
+      </button>
+      <div class="m-body-wrap"><div class="m-body"><div class="m-body-inner roster-names">
+        ${c.list.map(m => `<span class="name-pill">${esc(m.nome)}<small>${esc(m.funcao || "")}</small></span>`).join("")}
+      </div></div></div>
+    </div>`;
+  }).join("");
+
+  return `<div class="roster-card">
+    <div class="roster-top">
+      <div class="roster-ring">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--stone-soft)" stroke-width="13"/>
+          ${circles}
+          <text x="60" y="55" text-anchor="middle" class="ring-num">${total}</text>
+          <text x="60" y="72" text-anchor="middle" class="ring-lbl">${total === 1 ? "membro" : "membros"}</text>
+        </svg>
+      </div>
+      <div class="roster-chips">${chipsHtml}</div>
+    </div>
+  </div>`;
+}
+
+function alertDetailHtml(year, month, monthStats){
+  const withPts = monthStats.filter(m => m.pts > 0).sort((a,b) => b.pts - a.pts);
+  if(withPts.length === 0) return `<div class="m-occ-empty">Sem detalhes para este mês.</div>`;
+  return withPts.map(m => {
+    const st = statusOf(m.pts);
+    const rows = state.occurrences
+      .filter(o => o.data && o.membroKey === m.key && o.data.getMonth() + 1 === month && o.data.getFullYear() === year)
+      .sort((a,b) => b.data - a.data);
+    return `<div class="al-person">
+      <div class="al-person-head">
+        <span class="al-person-name">${esc(m.nome)}</span>
+        <span class="al-pts-pill" style="color:${st.color}; background:${st.bg};">${m.pts} pts</span>
+      </div>
+      <div class="m-occ">${rows.map(o => {
+        const pts = o.tipo ? POINTS[o.tipo] : 0;
+        const color = pts >= 3 ? "var(--brick)" : pts === 2 ? "var(--amber)" : "var(--emerald)";
+        const label = o.tipo ? TIPO_LABEL[o.tipo] : o.tipoRaw;
+        return `<div class="m-occ-row">
+          <span class="m-occ-date">${fmtDateFull(o.data)}</span>
+          <span class="m-occ-tipo" style="color:${color}">${esc(label)}</span>
+          ${thermHtml(pts)}
+          <span class="therm-n" style="color:${color}">+${pts}</span>
+          <span class="m-occ-obs">${esc(o.observacao || "")}</span>
+        </div>`;
+      }).join("")}</div>
+    </div>`;
+  }).join("");
+}
+
 function alertsHtml(){
   const keys = getMonthKeys(state.occurrences);
   const cards = [];
@@ -769,9 +935,19 @@ function alertsHtml(){
     const nar = narrativeFor(stats);
     if(!nar) return;
     const color = nar.worst === "reprovado" ? "var(--brick)" : nar.worst === "alerta" ? "var(--amber)" : "var(--emerald)";
-    cards.push(`<div class="alert-card" style="--sev-color:${color}">
-      <div class="al-month">${MONTHS_FULL[month-1]} ${year}</div>
-      <p>${nar.html}</p>
+    const akey = year + "-" + month;
+    const open = state.expandedAlerts.has(akey);
+    cards.push(`<div class="alert-card ${open ? "open" : ""}" style="--sev-color:${color}">
+      <button class="alert-head" data-alert-toggle="${akey}" aria-expanded="${open}">
+        <span class="al-text">
+          <span class="al-month">${MONTHS_FULL[month-1]} ${year}</span>
+          <span class="al-narrative">${nar.html}</span>
+        </span>
+        <span class="m-chev">⌄</span>
+      </button>
+      <div class="m-body-wrap"><div class="m-body"><div class="m-body-inner">
+        ${alertDetailHtml(year, month, stats)}
+      </div></div></div>
     </div>`);
   });
   if(cards.length === 0){
@@ -889,6 +1065,9 @@ function render(){
 
   content.innerHTML = `
     ${errorBannerHtml()}
+    <div class="section-head"><h2>Elenco</h2><div class="staff-mini"></div></div>
+    ${rosterCardHtml()}
+
     <div class="section-head"><h2>Alertas</h2><div class="staff-mini"></div></div>
     ${alertsHtml()}
 
@@ -913,6 +1092,24 @@ function bindDynamicHandlers(){
 
   const moreBtn = document.getElementById("btnMoreAlerts");
   if(moreBtn) moreBtn.addEventListener("click", () => { state.showAllAlerts = !state.showAllAlerts; render(); });
+
+  document.querySelectorAll(".roster-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-roster-toggle");
+      if(state.rosterExpanded.has(key)) state.rosterExpanded.delete(key);
+      else state.rosterExpanded.add(key);
+      render();
+    });
+  });
+
+  document.querySelectorAll(".alert-head").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-alert-toggle");
+      if(state.expandedAlerts.has(key)) state.expandedAlerts.delete(key);
+      else state.expandedAlerts.add(key);
+      render();
+    });
+  });
 
   document.querySelectorAll(".m-head").forEach(btn => {
     btn.addEventListener("click", () => {
