@@ -12,26 +12,32 @@
     --ink:#1B1B18;
     --ink-soft:#3A362F;
     --grey:#75705F;
-    --porcelain:#F7F4EE;
+    --porcelain:#EFE7D3;
+    --porcelain-top:#F7F2E5;
+    --porcelain-bottom:#E4DAC0;
     --card:#FFFFFF;
-    --stone:#EAE3D3;
-    --stone-soft:#F1ECDF;
+    --stone:#E4DBC5;
+    --stone-soft:#EEE7D5;
     --bronze:#8A6A3B;
     --bronze-soft:#F2EBDD;
+    --gold-rgb:200,163,64;
     --emerald:#3E7A5C;
     --emerald-soft:#E7F0EA;
     --amber:#B8842C;
     --amber-soft:#FBF0DD;
     --brick:#A8433D;
     --brick-soft:#F7E6E4;
-    --shadow: 0 1px 2px rgba(27,27,24,0.04), 0 8px 24px -12px rgba(27,27,24,0.12);
-    --shadow-lift: 0 4px 10px rgba(27,27,24,0.06), 0 16px 32px -14px rgba(27,27,24,0.18);
+    --shadow: 0 1px 2px rgba(27,27,24,0.05), 0 8px 24px -12px rgba(27,27,24,0.14);
+    --shadow-lift: 0 4px 10px rgba(27,27,24,0.07), 0 16px 32px -14px rgba(27,27,24,0.20);
     --radius: 14px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:var(--porcelain);
+    background:
+      radial-gradient(ellipse 1100px 480px at 50% -8%, #FFFDF7 0%, rgba(255,253,247,0) 62%),
+      linear-gradient(175deg, var(--porcelain-top) 0%, var(--porcelain) 46%, var(--porcelain-bottom) 100%);
+    background-attachment:fixed;
     color:var(--ink);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -45,7 +51,7 @@
   /* ---------- header ---------- */
   header.top{
     position:sticky; top:0; z-index:40;
-    background:rgba(247,244,238,0.86);
+    background:rgba(240,233,213,0.82);
     backdrop-filter:blur(10px) saturate(140%);
     border-bottom:1px solid var(--stone);
   }
@@ -54,12 +60,12 @@
     display:flex; align-items:center; justify-content:space-between; gap:16px;
     flex-wrap:wrap;
   }
-  .brand{ display:flex; align-items:center; gap:14px; }
-  .brand img{ height:46px; width:auto; display:block; }
+  .brand{ display:flex; align-items:center; gap:16px; }
+  .brand img{ height:64px; width:auto; display:block; }
   .brand .eyebrow{
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
     text-transform:uppercase; color:var(--bronze); border-left:1px solid var(--stone);
-    padding-left:14px; line-height:1.3;
+    padding-left:16px; line-height:1.3;
   }
   .brand .eyebrow small{ display:block; color:var(--grey); font-size:9.5px; letter-spacing:.1em; margin-top:2px;}
 
@@ -123,13 +129,27 @@
   .status-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--status-color); }
 
   @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+  @keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+  @keyframes glowPulse{
+    0%,100%{
+      box-shadow: 0 1px 2px rgba(27,27,24,.05), 0 10px 24px -14px rgba(27,27,24,.16),
+        0 0 0 1px rgba(var(--gold-rgb),.14), 0 0 14px -4px rgba(var(--gold-rgb),.18);
+    }
+    50%{
+      box-shadow: 0 1px 2px rgba(27,27,24,.05), 0 16px 34px -16px rgba(27,27,24,.20),
+        0 0 0 1px rgba(var(--gold-rgb),.30), 0 0 24px -3px rgba(var(--gold-rgb),.36);
+    }
+  }
 
   /* ---------- alerts ---------- */
   .alert-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
   .alert-card{
-    background:var(--card); border:1px solid var(--stone); border-left:4px solid var(--sev-color, var(--stone));
+    position:relative;
+    background:linear-gradient(180deg, #FFFFFF 0%, #FBF7EC 100%);
+    border:1px solid rgba(var(--gold-rgb),.30); border-left:4px solid var(--sev-color, var(--stone));
     border-radius:11px; padding:14px 18px; box-shadow:var(--shadow);
-    opacity:0; transform:translateY(8px); animation:fadeUp .45s ease forwards;
+    opacity:0; transform:translateY(8px);
+    animation: fadeUp .5s ease forwards, floatY 7s ease-in-out .5s infinite, glowPulse 6s ease-in-out .5s infinite;
   }
   .alert-card .al-month{
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
@@ -145,8 +165,11 @@
   /* ---------- member accordion ---------- */
   .m-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
   .m-row{
-    background:var(--card); border:1px solid var(--stone); border-radius:12px; box-shadow:var(--shadow);
-    overflow:hidden; opacity:0; transform:translateY(8px); animation:fadeUp .45s ease forwards;
+    position:relative;
+    background:linear-gradient(180deg, #FFFFFF 0%, #FBF7EC 100%);
+    border:1px solid rgba(var(--gold-rgb),.28); border-radius:12px; box-shadow:var(--shadow);
+    overflow:hidden; opacity:0; transform:translateY(8px);
+    animation: fadeUp .5s ease forwards, floatY 7.5s ease-in-out .5s infinite, glowPulse 6.5s ease-in-out .5s infinite;
   }
   .m-head{
     all:unset; box-sizing:border-box; display:flex; align-items:center; gap:14px; width:100%;
@@ -168,17 +191,23 @@
   .m-body-inner{ padding:14px 18px 18px; border-top:1px solid var(--stone-soft); }
 
   .m-strip{ display:flex; gap:4px; align-items:flex-end; height:50px; margin-bottom:16px; }
-  .m-strip .bar-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .m-strip .bar-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
   .m-strip .bar{ width:100%; border-radius:3px 3px 0 0; background:var(--stone-soft); min-height:3px; transition:height .3s ease; }
-  .m-strip .lbl{ font-family:'IBM Plex Mono'; font-size:9px; color:var(--grey); }
+  .m-strip .lbl{ font-family:'IBM Plex Mono'; font-size:8.5px; letter-spacing:-.2px; color:var(--grey); }
 
   .m-occ{ display:flex; flex-direction:column; gap:0; max-height:280px; overflow-y:auto; }
-  .m-occ-row{ display:flex; align-items:baseline; gap:12px; font-size:12.5px; padding:8px 2px; border-bottom:1px solid var(--stone-soft); }
+  .m-occ-row{ display:flex; align-items:center; gap:12px; font-size:12.5px; padding:8px 2px; border-bottom:1px solid var(--stone-soft); }
   .m-occ-row:last-child{ border-bottom:none; }
   .m-occ-date{ font-family:'IBM Plex Mono'; color:var(--grey); flex:none; width:72px; }
   .m-occ-tipo{ font-weight:600; flex:none; white-space:nowrap; }
   .m-occ-obs{ color:var(--grey); font-style:italic; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .m-occ-empty{ color:var(--grey); font-size:12.5px; padding:4px 2px; }
+
+  .therm{ display:inline-flex; gap:2px; align-items:flex-end; vertical-align:middle; flex:none; }
+  .therm i{ width:6px; height:9px; border-radius:1.5px; display:inline-block; background:var(--stone-soft); }
+  .therm i:nth-child(2){ height:12px; }
+  .therm i:nth-child(3){ height:15px; }
+  .therm-n{ font-family:'IBM Plex Mono'; font-size:10.5px; font-weight:600; flex:none; }
 
   /* ---------- empty / error states ---------- */
   .state-card{
@@ -241,7 +270,7 @@
     .wrap{ padding:0 14px 48px; }
   }
   @media (max-width: 480px){
-    .brand img{ height:34px; }
+    .brand img{ height:46px; }
     .brand .eyebrow small{ display:none; }
     .m-head{ gap:10px; padding:13px 14px; }
     .m-name{ font-size:15px; }
@@ -763,9 +792,18 @@ function memberStripHtml(monthsArr){
     const color = pts > 0 ? st.color : "var(--stone-soft)";
     return `<div class="bar-wrap" title="${MONTHS_FULL[i]}: ${pts} pts">
       <div class="bar" style="height:${h}px; background:${color}"></div>
-      <div class="lbl">${MONTHS[i][0]}</div>
+      <div class="lbl">${MONTHS[i]}</div>
     </div>`;
   }).join("")}</div>`;
+}
+
+function thermHtml(pts){
+  const segs = [1,2,3].map(n => {
+    const lit = pts >= n;
+    const color = n===1 ? "var(--emerald)" : n===2 ? "var(--amber)" : "var(--brick)";
+    return `<i style="background:${lit ? color : "var(--stone-soft)"}"></i>`;
+  }).join("");
+  return `<span class="therm" title="${pts} pts">${segs}</span>`;
 }
 
 function memberOccHtml(memberKey){
@@ -779,7 +817,9 @@ function memberOccHtml(memberKey){
     const label = o.tipo ? TIPO_LABEL[o.tipo] : o.tipoRaw;
     return `<div class="m-occ-row">
       <span class="m-occ-date">${fmtDateFull(o.data)}</span>
-      <span class="m-occ-tipo" style="color:${color}">${esc(label)} · +${pts}</span>
+      <span class="m-occ-tipo" style="color:${color}">${esc(label)}</span>
+      ${thermHtml(pts)}
+      <span class="therm-n" style="color:${color}">+${pts}</span>
       <span class="m-occ-obs">${esc(o.observacao || "")}</span>
     </div>`;
   }).join("")}</div>`;
