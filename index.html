@@ -203,6 +203,7 @@
   .al-strong{ font-weight:700; }
   .al-strong.reprovado{ color:var(--brick); }
   .al-strong.alerta{ color:var(--amber); }
+  .al-strong.proximo{ color:var(--brick); }
   .alert-empty{ color:var(--grey); font-size:13.5px; padding:18px 2px; }
   .alerts-more{ margin-top:4px; }
 
@@ -232,13 +233,17 @@
   .m-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16.5px; flex:1; min-width:0;
     display:flex; flex-direction:column; gap:2px; }
   .m-name .m-role{ font-family:'Inter'; font-weight:400; font-size:11.5px; color:var(--grey); }
+  .prox-badge{
+    display:inline-flex; align-items:center; gap:4px; font-size:9px; font-weight:700; letter-spacing:.02em;
+    padding:2px 7px; border-radius:999px; border:1px solid currentColor; width:fit-content; margin-top:1px;
+  }
   .m-pts{ font-family:'IBM Plex Mono'; font-weight:700; font-size:20px; text-align:right; flex:none; }
   .m-pts small{ font-size:10px; font-weight:500; margin-left:2px; color:var(--grey); }
   .m-chev{ color:var(--grey); font-size:12px; flex:none; transition:transform .25s ease; }
-  .m-row.open .m-chev, .alert-card.open .m-chev{ transform:rotate(180deg); }
+  .m-row.open .m-chev, .alert-card.open .m-chev, .roster-chip-row.open .m-chev{ transform:rotate(180deg); }
 
   .m-body-wrap{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
-  .m-row.open .m-body-wrap, .alert-card.open .m-body-wrap{ grid-template-rows:1fr; }
+  .m-row.open .m-body-wrap, .alert-card.open .m-body-wrap, .roster-chip-row.open .m-body-wrap{ grid-template-rows:1fr; }
   .m-body{ overflow:hidden; }
   .m-body-inner{ padding:14px 18px 18px; border-top:1px solid var(--stone-soft); }
 
@@ -276,6 +281,15 @@
   .banner.warn{ background:var(--amber-soft); color:var(--amber); border-color:rgba(184,132,44,.25); }
   .banner button{ margin-left:auto; }
 
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(16px);
+    background:var(--ink); color:#fff; font-size:13px; font-weight:500; padding:11px 20px; border-radius:999px;
+    box-shadow:var(--shadow-lift); opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:90;
+    max-width:min(88vw, 420px); text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.err{ background:var(--brick); }
+
   /* ---------- buttons ---------- */
   .btn{
     font-family:'Inter'; font-weight:600; font-size:13px; border-radius:9px; padding:10px 16px;
@@ -286,6 +300,7 @@
   .btn:active{ transform:translateY(1px); }
   .btn.ghost{ background:transparent; color:var(--bronze); }
   .btn.subtle{ background:var(--card); color:var(--ink-soft); border-color:var(--stone); }
+  .btn.sm{ padding:6px 13px; font-size:11.5px; }
 
   /* ---------- settings drawer ---------- */
   .overlay{
@@ -349,6 +364,9 @@
     <div class="controls">
       <select id="selMonth" class="picker" aria-label="Mês"></select>
       <select id="selYear" class="picker" aria-label="Ano"></select>
+      <button id="btnPdf" class="iconbtn" title="Baixar relatório em PDF" aria-label="Baixar relatório em PDF">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+      </button>
       <button id="btnSync" class="iconbtn" title="Atualizar agora" aria-label="Atualizar agora">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>
       </button>
@@ -704,12 +722,32 @@ function narrativeFor(monthStats){
   const reprovados = withPts.filter(m => m.pts >= 7).sort((a,b) => b.pts - a.pts);
   const alertas = withPts.filter(m => m.pts >= 4 && m.pts < 7).sort((a,b) => b.pts - a.pts);
   const relevantes = withPts.filter(m => m.pts > 0 && m.pts < 4).sort((a,b) => b.pts - a.pts);
+  const nearReprovado = withPts.filter(m => m.pts === 6);
   const parts = [];
   if(reprovados.length) parts.push(`<span class="al-strong reprovado">${personList(reprovados)}</span> ${vb(reprovados.length,"ficou reprovado","ficaram reprovados")}.`);
   if(alertas.length) parts.push(`<span class="al-strong alerta">${personList(alertas)}</span> ${vb(alertas.length,"ficou em alerta","ficaram em alerta")}.`);
   if(relevantes.length) parts.push(`${personList(relevantes)} ${vb(relevantes.length,"teve pontuação relevante","tiveram pontuação relevante")}.`);
+  if(nearReprovado.length) parts.push(`<span class="al-strong proximo">⚠ ${personList(nearReprovado)}</span> ${vb(nearReprovado.length,"está a 1 ponto de ser reprovado","estão a 1 ponto de ser reprovados")}.`);
   const worst = reprovados.length ? "reprovado" : alertas.length ? "alerta" : "ok";
   return { html: parts.join(" "), worst };
+}
+
+function proximityNote(pts){
+  if(pts === 3) return { label: "perto do alerta", color: "var(--amber)" };
+  if(pts === 6) return { label: "perto do reprovado", color: "var(--brick)" };
+  return null;
+}
+
+function getUnknownOccurrences(members, occurrences){
+  const rosterKeys = new Set(members.map(m => m.key));
+  const map = new Map();
+  occurrences.forEach(o => {
+    if(!rosterKeys.has(o.membroKey)){
+      if(!map.has(o.membroKey)) map.set(o.membroKey, { nome: o.membro, count: 0 });
+      map.get(o.membroKey).count++;
+    }
+  });
+  return Array.from(map.values());
 }
 
 function getYearRange(occurrences){
@@ -1001,6 +1039,13 @@ function memberOccHtml(memberKey){
   }).join("")}</div>`;
 }
 
+function unknownBannerHtml(){
+  const unknown = getUnknownOccurrences(state.members, state.occurrences);
+  if(unknown.length === 0) return "";
+  const items = unknown.map(u => `"${esc(u.nome)}" (${u.count} ${u.count === 1 ? "ocorrência" : "ocorrências"})`).join(", ");
+  return `<div class="banner warn">⚠️ Encontrei ocorrência(s) de ${items} que não bate com nenhum nome cadastrado em Membros — confira a grafia na planilha.</div>`;
+}
+
 function memberListHtml(){
   const monthStats = computeMonthStats(state.members, state.occurrences, state.month, state.year);
   const ranked = [...monthStats].sort((a,b) => b.pts - a.pts || a.nome.localeCompare(b.nome));
@@ -1009,12 +1054,13 @@ function memberListHtml(){
 
   return `<div class="m-list">${ranked.map((m, i) => {
     const st = statusOf(m.pts);
+    const prox = proximityNote(m.pts);
     const open = state.expanded.has(m.key);
     const monthsArr = heatMap.get(m.key) || new Array(12).fill(0);
     return `<div class="m-row ${open ? "open" : ""}" style="animation-delay:${i*35}ms;">
       <button class="m-head" data-toggle="${esc(m.key)}" aria-expanded="${open}">
         <span class="m-bar" style="background:${st.color}"></span>
-        <span class="m-name">${esc(m.nome)}<span class="m-role">${esc(m.funcao || "—")}</span></span>
+        <span class="m-name">${esc(m.nome)}<span class="m-role">${esc(m.funcao || "—")}</span>${prox ? `<span class="prox-badge" style="color:${prox.color}; border-color:${prox.color}">⚠ ${prox.label}</span>` : ""}</span>
         <span class="m-pts" style="color:${st.color}">${m.pts}<small>pts</small></span>
         <span class="status-pill" style="--status-color:${st.color}; --status-bg:${st.bg};"><span class="dot"></span>${st.label}</span>
         <span class="m-chev">⌄</span>
@@ -1062,16 +1108,18 @@ function render(){
   }
 
   populateSelectors();
+  const allOpen = state.members.length > 0 && state.members.every(m => state.expanded.has(m.key));
 
   content.innerHTML = `
     ${errorBannerHtml()}
+    ${unknownBannerHtml()}
     <div class="section-head"><h2>Elenco</h2><div class="staff-mini"></div></div>
     ${rosterCardHtml()}
 
     <div class="section-head"><h2>Alertas</h2><div class="staff-mini"></div></div>
     ${alertsHtml()}
 
-    <div class="section-head"><h2>Membros</h2><span class="hint">clique para ver o histórico completo</span><div class="staff-mini"></div></div>
+    <div class="section-head"><h2>Membros</h2><button class="btn ghost sm" id="btnExpandAll">${allOpen ? "Recolher tudo" : "Expandir tudo"}</button><div class="staff-mini"></div></div>
     ${memberListHtml()}
   `;
 
@@ -1092,6 +1140,14 @@ function bindDynamicHandlers(){
 
   const moreBtn = document.getElementById("btnMoreAlerts");
   if(moreBtn) moreBtn.addEventListener("click", () => { state.showAllAlerts = !state.showAllAlerts; render(); });
+
+  const expandAllBtn = document.getElementById("btnExpandAll");
+  if(expandAllBtn) expandAllBtn.addEventListener("click", () => {
+    const allOpen = state.members.length > 0 && state.members.every(m => state.expanded.has(m.key));
+    if(allOpen) state.expanded.clear();
+    else state.members.forEach(m => state.expanded.add(m.key));
+    render();
+  });
 
   document.querySelectorAll(".roster-chip").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1121,6 +1177,205 @@ function bindDynamicHandlers(){
   });
 }
 
+/* ================= toast ================= */
+function showToast(message, isError){
+  let t = document.getElementById("toast");
+  if(!t){
+    t = document.createElement("div");
+    t.id = "toast";
+    t.className = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = message;
+  t.className = "toast show" + (isError ? " err" : "");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = "toast"; }, 4200);
+}
+
+/* ================= PDF export ================= */
+let pdfLibsPromise = null;
+function loadScriptOnce(src){
+  return new Promise((resolve, reject) => {
+    if(document.querySelector(`script[src="${src}"]`)){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("falha ao carregar biblioteca de PDF"));
+    document.head.appendChild(s);
+  });
+}
+function ensurePdfLibs(){
+  if(!pdfLibsPromise){
+    pdfLibsPromise = loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js")
+      .then(() => loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"));
+  }
+  return pdfLibsPromise;
+}
+
+async function exportMonthlyPdf(){
+  if(!state.members.length){
+    showToast("Sem dados para gerar o PDF ainda.", true);
+    return;
+  }
+  const btn = document.getElementById("btnPdf");
+  if(btn) btn.classList.add("spinning");
+  try{
+    await ensurePdfLibs();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const margin = 16;
+
+    const INK = [27,27,24], GREY = [117,112,95], BRONZE = [138,106,59], STONE = [228,219,197],
+      PORCELAIN = [239,231,211], EMERALD = [62,122,92], AMBER = [184,132,44], BRICK = [168,67,61], TEAL = [62,110,122];
+
+    // header band
+    doc.setFillColor(...PORCELAIN);
+    doc.rect(0, 0, pageW, 34, "F");
+    try{
+      const logoH = 15, logoW = logoH * (1566 / 1064);
+      doc.addImage(LOGO_SRC, "PNG", margin, 9, logoW, logoH);
+    }catch(e){ /* logo optional */ }
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(...INK);
+    doc.text("STUDIO SCORE", pageW - margin, 15, { align: "right" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...GREY);
+    doc.text("Controle de Presença · Abba One", pageW - margin, 21, { align: "right" });
+    doc.setFontSize(9.5);
+    doc.setTextColor(...BRONZE);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${MONTHS_FULL[state.month-1]} ${state.year}`, pageW - margin, 28, { align: "right" });
+
+    doc.setDrawColor(...BRONZE);
+    doc.setLineWidth(0.4);
+    doc.line(margin, 36, pageW - margin, 36);
+
+    let y = 47;
+
+    // roster line
+    const groups = computeRosterSummary(state.members);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    doc.setTextColor(...INK);
+    doc.text("Elenco", margin, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
+    doc.setTextColor(...GREY);
+    const rosterLine = `${state.members.length} membros · ${groups.vocal.length} vocais · ${groups.musico.length} músicos` +
+      (groups.outro.length ? ` · ${groups.outro.length} outras funções` : "") +
+      (groups.licenca.length ? ` · ${groups.licenca.length} em licença` : "");
+    doc.text(rosterLine, margin, y + 6);
+    y += 16;
+
+    // narrative box
+    const monthStats = computeMonthStats(state.members, state.occurrences, state.month, state.year);
+    const nar = narrativeFor(monthStats);
+    if(nar){
+      const plainText = nar.html.replace(/<[^>]+>/g, "");
+      const sevColor = nar.worst === "reprovado" ? BRICK : nar.worst === "alerta" ? AMBER : EMERALD;
+      const lines = doc.splitTextToSize(plainText, pageW - margin*2 - 10);
+      const boxH = 9 + lines.length * 5;
+      doc.setFillColor(252, 250, 244);
+      doc.setDrawColor(...STONE);
+      doc.setLineWidth(0.2);
+      doc.roundedRect(margin, y, pageW - margin*2, boxH, 2, 2, "FD");
+      doc.setFillColor(...sevColor);
+      doc.rect(margin, y, 1.6, boxH, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(...GREY);
+      doc.text("ALERTA DO MÊS", margin + 6, y + 6);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(...INK);
+      doc.text(lines, margin + 6, y + 11.5);
+      y += boxH + 10;
+    }
+
+    // detail table
+    const rows = [...monthStats].sort((a,b) => b.pts - a.pts).map(m => {
+      const st = statusOf(m.pts);
+      return [m.nome, m.funcao || "—", String(m.faltaEnsaio), String(m.atrasoEnsaio), String(m.faltaAgenda), String(m.atrasoAgenda), String(m.pts), st.label];
+    });
+    doc.autoTable({
+      startY: y,
+      margin: { left: margin, right: margin },
+      head: [["Membro","Função","Falta Ens.","Atraso Ens.","Falta Ag.","Atraso Ag.","Total","Status"]],
+      body: rows,
+      styles: { font: "helvetica", fontSize: 8.5, textColor: INK, lineColor: STONE, lineWidth: 0.15, cellPadding: 2.4 },
+      headStyles: { fillColor: BRONZE, textColor: [255,255,255], fontStyle: "bold", fontSize: 8 },
+      alternateRowStyles: { fillColor: [251,248,241] },
+      columnStyles: { 2:{halign:"center"}, 3:{halign:"center"}, 4:{halign:"center"}, 5:{halign:"center"}, 6:{halign:"center", fontStyle:"bold"} },
+      didParseCell: (data) => {
+        if(data.section === "body" && data.column.index === 7){
+          const label = data.cell.raw;
+          const c = label === "Reprovado" ? BRICK : label === "Alerta" ? AMBER : EMERALD;
+          data.cell.styles.textColor = c;
+          data.cell.styles.fontStyle = "bold";
+        }
+      },
+    });
+    y = doc.lastAutoTable.finalY + 10;
+
+    // occurrences table
+    const occRows = state.occurrences
+      .filter(o => o.data && o.data.getMonth()+1 === state.month && o.data.getFullYear() === state.year)
+      .sort((a,b) => b.data - a.data)
+      .map(o => {
+        const pts = o.tipo ? POINTS[o.tipo] : 0;
+        const label = o.tipo ? TIPO_LABEL[o.tipo] : o.tipoRaw;
+        return [fmtDateFull(o.data), o.membro, label, "+" + pts, o.observacao || "—"];
+      });
+
+    if(occRows.length){
+      if(y > 250){ doc.addPage(); y = 24; }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11.5);
+      doc.setTextColor(...INK);
+      doc.text("Ocorrências do mês", margin, y);
+      y += 5;
+      doc.autoTable({
+        startY: y,
+        margin: { left: margin, right: margin },
+        head: [["Data","Membro","Tipo","Pontos","Observação"]],
+        body: occRows,
+        styles: { font: "helvetica", fontSize: 8.5, textColor: INK, lineColor: STONE, lineWidth: 0.15, cellPadding: 2.4 },
+        headStyles: { fillColor: TEAL, textColor: [255,255,255], fontStyle: "bold", fontSize: 8 },
+        alternateRowStyles: { fillColor: [251,248,241] },
+        columnStyles: { 3:{halign:"center", fontStyle:"bold"} },
+      });
+    }
+
+    // footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++){
+      doc.setPage(i);
+      const h = doc.internal.pageSize.getHeight();
+      doc.setDrawColor(...STONE);
+      doc.setLineWidth(0.2);
+      doc.line(margin, h - 14, pageW - margin, h - 14);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(...GREY);
+      doc.text("Studio Score · Abba One", margin, h - 9);
+      doc.text(`Gerado em ${new Date().toLocaleString("pt-BR")}`, pageW / 2, h - 9, { align: "center" });
+      doc.text(`Página ${i} de ${pageCount}`, pageW - margin, h - 9, { align: "right" });
+    }
+
+    const fname = `Studio-Score_${MONTHS_FULL[state.month-1]}-${state.year}.pdf`;
+    doc.save(fname);
+    showToast("PDF gerado com sucesso.");
+  }catch(err){
+    showToast("Não consegui gerar o PDF: " + (err.message || err), true);
+  }finally{
+    if(btn) btn.classList.remove("spinning");
+  }
+}
+
 function openDrawer(){
   document.getElementById("overlay").classList.add("open");
   document.getElementById("drawer").classList.add("open");
@@ -1139,6 +1394,7 @@ async function boot(){
   document.getElementById("btnCloseDrawer").addEventListener("click", closeDrawer);
   document.getElementById("overlay").addEventListener("click", closeDrawer);
   document.getElementById("btnSync").addEventListener("click", () => syncData(true));
+  document.getElementById("btnPdf").addEventListener("click", exportMonthlyPdf);
   document.getElementById("selMonth").addEventListener("change", (e) => { state.month = +e.target.value; render(); });
   document.getElementById("selYear").addEventListener("change", (e) => { state.year = +e.target.value; render(); });
 
